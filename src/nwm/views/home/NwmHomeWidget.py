@@ -4,6 +4,9 @@
 
 from PySide import QtGui
 
+from pyglass.elements.buttons.PyGlassPushButton import PyGlassPushButton
+from pyglass.elements.icons.IconSheetMap import IconSheetMap
+from pyglass.enum.SizeEnum import SizeEnum
 from pyglass.widgets.PyGlassWidget import PyGlassWidget
 
 from nwm.enum.AppConfigEnum import AppConfigEnum
@@ -18,7 +21,8 @@ class NwmHomeWidget(PyGlassWidget):
 #===================================================================================================
 #                                                                                       C L A S S
 
-    _HEADER_STYLE = "QLabel { font-size:12px; } "
+    _HEADER_STYLE = "QLabel { font-size:14px; }"
+    _INFO_STYLE   = "QLabel { font-size:10px; color:#666; }"
 
     _serverThread = None
 
@@ -29,16 +33,21 @@ class NwmHomeWidget(PyGlassWidget):
 
         mainLayout = self._getLayout(self, QtGui.QVBoxLayout)
         mainLayout.setContentsMargins(6, 6, 6, 6)
-        mainLayout.setSpacing(6)
 
         rootPath = self.mainWindow.appConfig.get(
             AppConfigEnum.ROOT_PATH, NGinxSetupOps.getExePath()
         )
 
         label = QtGui.QLabel(self)
-        label.setText(u'Root Location:')
+        label.setText(u'Server Container Path:')
         label.setStyleSheet(self._HEADER_STYLE)
         mainLayout.addWidget(label)
+
+        label = QtGui.QLabel(self)
+        label.setText(u'The absolute path the location NGinx will use as its root source')
+        label.setStyleSheet(self._INFO_STYLE)
+        mainLayout.addWidget(label)
+        mainLayout.addSpacing(3)
 
         textWidget, textLayout = self._createWidget(self, QtGui.QHBoxLayout, True)
 
@@ -47,36 +56,44 @@ class NwmHomeWidget(PyGlassWidget):
         textLayout.addWidget(text)
         self._pathLineEdit = text
 
-        recent = QtGui.QToolButton(textWidget)
-        recent.setText(u'recent')
+        recent = PyGlassPushButton(textWidget, icon=IconSheetMap.DOWN, size=SizeEnum.SMALL)
+        recent.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Preferred)
         recent.clicked.connect(self._handleRecentLocations)
         textLayout.addWidget(recent)
         self._recentBtn = recent
 
-        browse = QtGui.QToolButton(textWidget)
-        browse.setText(u'...')
+        browse = PyGlassPushButton(textWidget, icon=IconSheetMap.FOLDER, size=SizeEnum.SMALL)
+        browse.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Preferred)
         browse.clicked.connect(self._handleLocatePath)
         textLayout.addWidget(browse)
         self._browseBtn = browse
 
+        mainLayout.addSpacing(20)
+
         label = QtGui.QLabel(self)
-        label.setText(u'Server Actions:')
+        label.setText(u'Server Management:')
         label.setStyleSheet(self._HEADER_STYLE)
         mainLayout.addWidget(label)
 
+        label = QtGui.QLabel(self)
+        label.setText(u'Modify the state of your NGinx server')
+        label.setStyleSheet(self._INFO_STYLE)
+        mainLayout.addWidget(label)
+        mainLayout.addSpacing(3)
+
         buttonBox, boxLayout = self._createWidget(self, QtGui.QHBoxLayout, True)
 
-        btn = QtGui.QPushButton(buttonBox, text='Start')
+        btn = PyGlassPushButton(buttonBox, text='Start', icon=IconSheetMap.FORWARD)
         btn.clicked.connect(self._handleStartServer)
         boxLayout.addWidget(btn)
         self._startBtn = btn
 
-        btn = QtGui.QPushButton(buttonBox, text='Stop')
+        btn = PyGlassPushButton(buttonBox, text='Stop', icon=IconSheetMap.X)
         btn.clicked.connect(self._handleStopServer)
         boxLayout.addWidget(btn)
         self._stopBtn = btn
 
-        btn = QtGui.QPushButton(buttonBox, text='Reload')
+        btn = PyGlassPushButton(buttonBox, text='Reload', icon=IconSheetMap.ROTATE)
         btn.clicked.connect(self._handleReloadServer)
         boxLayout.addWidget(btn)
         self._reloadBtn = btn
