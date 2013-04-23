@@ -48,8 +48,8 @@ class NwmRecentWidget(PyGlassWidget):
             topWidget,
             text='Cancel',
             icon=IconSheetMap.CANCEL,
-            size=SizeEnum.SMALL,
-            colorScheme=ColorSchemes.COPPER
+            size=SizeEnum.MEDIUM,
+            colorScheme=ColorSchemes.BLUE
         )
         btn.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Preferred)
         btn.clicked.connect(self._handleCancel)
