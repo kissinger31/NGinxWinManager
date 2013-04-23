@@ -4,6 +4,9 @@
 
 from PySide import QtGui
 
+from pyaid.file.FileUtils import FileUtils
+from pyaid.list.ListUtils import ListUtils
+
 from pyglass.elements.buttons.PyGlassPushButton import PyGlassPushButton
 from pyglass.elements.icons.IconSheetMap import IconSheetMap
 from pyglass.enum.SizeEnum import SizeEnum
@@ -114,6 +117,9 @@ class NwmHomeWidget(PyGlassWidget):
         if path:
             return path
         return NGinxSetupOps.getExePath()
+    @rootPath.setter
+    def rootPath(self, value):
+        self._pathLineEdit.setText(FileUtils.cleanupPath(value))
 
 #===================================================================================================
 #                                                                                     P U B L I C
@@ -132,7 +138,10 @@ class NwmHomeWidget(PyGlassWidget):
         self._startBtn.setEnabled(self._serverThread is None)
         self._stopBtn.setEnabled(self._serverThread is not None)
         self._reloadBtn.setEnabled(self._serverThread is not None)
+
         self._pathLineEdit.setEnabled(self._serverThread is None)
+        self._browseBtn.setEnabled(self._serverThread is None)
+        self._recentBtn.setEnabled(self._serverThread is None)
 
 #===================================================================================================
 #                                                                                 H A N D L E R S
@@ -149,7 +158,15 @@ class NwmHomeWidget(PyGlassWidget):
             print 'ALREADY RUNNING'
             return
 
-        thread = NGinxRemoteThread(self, rootPath=self.rootPath)
+        path = self.rootPath
+        self.mainWindow.appConfig.set(AppConfigEnum.ROOT_PATH, path)
+        recentPaths = self.mainWindow.appConfig.get(
+            AppConfigEnum.RECENT_PATHS, []
+        )
+        ListUtils.addIfMissing(path, recentPaths, reorder=True, frontOrdering=True)
+        self.mainWindow.appConfig.set(AppConfigEnum.RECENT_PATHS, recentPaths)
+
+        thread = NGinxRemoteThread(self, rootPath=path)
         self._serverThread = thread
         thread.start()
         self.mainWindow.updateStatusBar(u'NGinx server now active')
@@ -188,8 +205,8 @@ class NwmHomeWidget(PyGlassWidget):
         )
 
         if path:
+            path = FileUtils.cleanupPath(path)
             self._pathLineEdit.setText(path)
-            self.mainWindow.appConfig.set(AppConfigEnum.ROOT_PATH, path)
 
 #___________________________________________________________________________________________________ _handleRecentLocations
     def _handleRecentLocations(self):
