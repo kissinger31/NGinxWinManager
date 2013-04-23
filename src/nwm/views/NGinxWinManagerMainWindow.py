@@ -6,6 +6,7 @@ from PySide import QtGui
 
 from nwm.views.BaseWindow import BaseWindow
 from nwm.views.home.NwmHomeWidget import NwmHomeWidget
+from nwm.views.recent.NwmRecentWidget import NwmRecentWidget
 
 #___________________________________________________________________________________________________ NGinxWinManagerMainWindow
 class NGinxWinManagerMainWindow(BaseWindow):
@@ -19,7 +20,8 @@ class NGinxWinManagerMainWindow(BaseWindow):
         super(NGinxWinManagerMainWindow, self).__init__(
             title=u'NGinx Windows Manager',
             widgets={
-                'home':NwmHomeWidget
+                'home':NwmHomeWidget,
+                'recent':NwmRecentWidget
             },
             **kwargs
         )

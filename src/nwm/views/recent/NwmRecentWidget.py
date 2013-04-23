@@ -1,4 +1,4 @@
-# NwmHomeWidget.py
+# NwmRecentWidget.py
 # (C)2013
 # Scott Ernst
 
@@ -11,8 +11,8 @@ from nwm.ops.NGinxRunOps import NGinxRunOps
 from nwm.ops.NGinxSetupOps import NGinxSetupOps
 from nwm.threads.NGinxRemoteThread import NGinxRemoteThread
 
-#___________________________________________________________________________________________________ NwmHomeWidget
-class NwmHomeWidget(PyGlassWidget):
+#___________________________________________________________________________________________________ NwmRecentWidget
+class NwmRecentWidget(PyGlassWidget):
     """A class for..."""
 
 #===================================================================================================
@@ -24,68 +24,18 @@ class NwmHomeWidget(PyGlassWidget):
 
 #___________________________________________________________________________________________________ __init__
     def __init__(self, parent, **kwargs):
-        """Creates a new instance of NwmHomeWidget."""
-        super(NwmHomeWidget, self).__init__(parent, widgetFile=False, id='home', **kwargs)
+        """Creates a new instance of NwmRecentWidget."""
+        super(NwmRecentWidget, self).__init__(parent, widgetFile=False, id='recent', **kwargs)
 
         mainLayout = self._getLayout(self, QtGui.QVBoxLayout)
         mainLayout.setContentsMargins(6, 6, 6, 6)
         mainLayout.setSpacing(6)
 
-        rootPath = self.mainWindow.appConfig.get(
-            AppConfigEnum.ROOT_PATH, NGinxSetupOps.getExePath()
+        recentPaths = self.mainWindow.appConfig.get(
+            AppConfigEnum.RECENT_PATHS, []
         )
 
-        label = QtGui.QLabel(self)
-        label.setText(u'Root Location:')
-        label.setStyleSheet(self._HEADER_STYLE)
-        mainLayout.addWidget(label)
-
-        textWidget, textLayout = self._createWidget(self, QtGui.QHBoxLayout, True)
-
-        text = QtGui.QLineEdit(textWidget)
-        text.setText(rootPath)
-        textLayout.addWidget(text)
-        self._pathLineEdit = text
-
-        recent = QtGui.QToolButton(textWidget)
-        recent.setText(u'recent')
-        recent.clicked.connect(self._handleRecentLocations)
-        textLayout.addWidget(recent)
-        self._recentBtn = recent
-
-        browse = QtGui.QToolButton(textWidget)
-        browse.setText(u'...')
-        browse.clicked.connect(self._handleLocatePath)
-        textLayout.addWidget(browse)
-        self._browseBtn = browse
-
-        label = QtGui.QLabel(self)
-        label.setText(u'Server Actions:')
-        label.setStyleSheet(self._HEADER_STYLE)
-        mainLayout.addWidget(label)
-
-        buttonBox, boxLayout = self._createWidget(self, QtGui.QHBoxLayout, True)
-
-        btn = QtGui.QPushButton(buttonBox, text='Start')
-        btn.clicked.connect(self._handleStartServer)
-        boxLayout.addWidget(btn)
-        self._startBtn = btn
-
-        btn = QtGui.QPushButton(buttonBox, text='Stop')
-        btn.clicked.connect(self._handleStopServer)
-        boxLayout.addWidget(btn)
-        self._stopBtn = btn
-
-        btn = QtGui.QPushButton(buttonBox, text='Reload')
-        btn.clicked.connect(self._handleReloadServer)
-        boxLayout.addWidget(btn)
-        self._reloadBtn = btn
-
-        boxLayout.addStretch()
-
         mainLayout.addStretch()
-
-        self._updateDisplay()
 
 #===================================================================================================
 #                                                                                   G E T / S E T
@@ -176,4 +126,4 @@ class NwmHomeWidget(PyGlassWidget):
 
 #___________________________________________________________________________________________________ _handleRecentLocations
     def _handleRecentLocations(self):
-        self.mainWindow.setActiveWidget('recent')
+        pass
