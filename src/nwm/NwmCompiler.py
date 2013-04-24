@@ -29,10 +29,20 @@ class NwmCompiler(PyGlassApplicationCompiler):
     def appFilename(self):
         return 'NGinxWinManager'
 
+#___________________________________________________________________________________________________ GS: appDisplayName
+    @property
+    def appDisplayName(self):
+        return 'NGinxWinManager'
+
 #___________________________________________________________________________________________________ GS: applicationClass
     @property
     def applicationClass(self):
         return NGinxWinManagerApplication
+
+#___________________________________________________________________________________________________ GS: iconPath
+    @property
+    def iconPath(self):
+        return ['apps', 'NGinxWinManager', 'icons']
 
 ####################################################################################################
 ####################################################################################################
