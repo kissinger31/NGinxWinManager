@@ -1,4 +1,6 @@
 .idea
 local
 *.pyc
-bin
+bin/dist
+bin/setup*
+bin/*.nsi
